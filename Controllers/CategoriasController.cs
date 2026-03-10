@@ -6,7 +6,7 @@ using System.Data;
 
 namespace APICatalogo.Controllers;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class CategoriasController : ControllerBase
 {
@@ -16,7 +16,7 @@ public class CategoriasController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("produtos")]
+    [HttpGet("produtos")]   //  /categorias/produtos
     public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
     {
         return _context.Categorias.Include(p => p.Produtos).ToList();
@@ -36,7 +36,7 @@ public class CategoriasController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}", Name ="ObterCategoria")]
+    [HttpGet("{id:int:min(1)}", Name ="ObterCategoria")]
     public ActionResult<Categoria> Get(int id)
     {
         try
