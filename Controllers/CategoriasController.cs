@@ -1,8 +1,7 @@
 using APICatalogo.Context;
-using Microsoft.AspNetCore.Mvc;
 using APICatalogo.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace APICatalogo.Controllers;
 
@@ -10,70 +9,57 @@ namespace APICatalogo.Controllers;
 [ApiController]
 public class CategoriasController : ControllerBase
 {
-    public readonly AppDbContext _context;
-    public CategoriasController(AppDbContext context)
+    private readonly AppDbContext _context;
+    private readonly ILogger<CategoriasController> _logger;
+    public CategoriasController(AppDbContext context, ILogger<CategoriasController> logger)
     {
         _context = context;
-    }
-
-    [HttpGet("produtos")]   //  /categorias/produtos
-    public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
-    {
-        return _context.Categorias.Include(p => p.Produtos).ToList();
+        _logger = logger;
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Categoria>> Get()
+    public async Task<ActionResult<IEnumerable<Categoria>>> Get()
     {
-        try
-        {
-            return _context.Categorias.Take(10).AsNoTracking().ToList();
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, 
-            "Ocorreu um erro ao tratar a sua solicitação.");
-        }
+        return await _context.Categorias.AsNoTracking().ToListAsync();
     }
 
-    [HttpGet("{id:int:min(1)}", Name ="ObterCategoria")]
+    [HttpGet("{id:int}", Name = "ObterCategoria")]
     public ActionResult<Categoria> Get(int id)
     {
-        try
+        var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
+
+        if (categoria == null)
         {
-            var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
-            if(categoria is null)
-            {
-                return BadRequest("Categoria não encontrada!");
-            }
-            return categoria;
+            _logger.LogWarning($"Categoria com id= {id} não encontrada...");
+            return NotFound($"Categoria com id= {id} não encontrada...");
         }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, 
-            "Ocorreu um erro ao tratar a sua solicitação.");
-        }
+        return Ok(categoria);
     }
 
     [HttpPost]
     public ActionResult Post(Categoria categoria)
     {
-        if(categoria is null)
+        if (categoria is null)
         {
-            return BadRequest("Categoria não encontrada!");
+            _logger.LogWarning($"Dados inválidos...");
+            return BadRequest("Dados inválidos");
         }
+
         _context.Categorias.Add(categoria);
         _context.SaveChanges();
-        return new CreatedAtRouteResult("ObterCategoria", new {id = categoria.CategoriaId}, categoria);
+
+        return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoria);
     }
 
     [HttpPut("{id:int}")]
     public ActionResult Put(int id, Categoria categoria)
     {
-        if(id != categoria.CategoriaId)
+        if (id != categoria.CategoriaId)
         {
-            return BadRequest("Categoria não encontrada!");
+            _logger.LogWarning($"Dados inválidos...");
+            return BadRequest("Dados inválidos");
         }
+
         _context.Entry(categoria).State = EntityState.Modified;
         _context.SaveChanges();
         return Ok(categoria);
@@ -83,10 +69,13 @@ public class CategoriasController : ControllerBase
     public ActionResult Delete(int id)
     {
         var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
-        if(categoria is null)
+
+        if (categoria == null)
         {
-            return NotFound("Categoria não encontrada!");
+            _logger.LogWarning($"Categoria com id={id} não encontrada...");
+            return NotFound($"Categoria com id={id} não encontrada...");
         }
+
         _context.Categorias.Remove(categoria);
         _context.SaveChanges();
         return Ok(categoria);
