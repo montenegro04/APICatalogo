@@ -17,12 +17,13 @@ O domínio simula um catálogo simples com uma relação de 1:N entre **Categori
 ## 🚀 Principais Aprendizados e Desafios Superados
 Durante o desenvolvimento, implementei e resolvi diversas situações do mundo real, aprofundando o conhecimento em:
 
-* **Manipulação de Dados:** Entendimento aprofundado sobre **serialização e desserialização de JSON**, ajustando o comportamento do serializador nativo para comunicação entre cliente e servidor.
-* **Otimização de Consultas (Performance):** Aplicação do método `.AsNoTracking()` no Entity Framework para *endpoints* de leitura (GET), melhorando a performance e economizando memória ao evitar o rastreamento desnecessário de estado das entidades.
-* **Filtros e Limitação de Dados:** Uso do método `.Take()` em consultas LINQ para restringir a quantidade de registros retornados, preparando o terreno para paginação de dados.
-* **Resiliência e Segurança:** Implementação de tratamento de erros com blocos `try-catch`, garantindo que exceções sejam capturadas de forma elegante e retornem respostas HTTP consistentes (como Status 500) sem derrubar a aplicação.
-* **Tratamento de Referências Circulares:** Resolução de *loops* infinitos (*Object Cycles*) na leitura de dados relacionados (Categoria <-> Produto) utilizando `ReferenceHandler.IgnoreCycles`.
-* **Configuração de Documentação e Rotas:** Alternância entre Swagger e Scalar, resolução de conflitos em atributos de rota (como espaços indevidos em `[HttpPut("{id:int}")]`) e interpretação de erros de validação (Status 400).
+* **Programação Assíncrona (`async/await`):** Transição para métodos assíncronos no acesso a dados, liberando *threads* durante operações de I/O para melhorar a escalabilidade e o tempo de resposta da API.
+* **Arquitetura e Pipeline HTTP:** Entendimento profundo do fluxo de requisições no ASP.NET Core através da configuração e uso de **Middlewares** para interceptar, processar ou barrar chamadas antes que cheguem aos *controllers*.
+* **Tratamento Global de Exceções e Logging:** Evolução na resiliência da aplicação. Substituição de blocos `try-catch` repetitivos por uma abordagem centralizada e elegante usando **Filtros de Exceção (Exception Filters)** e a interface **`IExceptionHandler`** global, integrados com **Logging** para registrar falhas silenciosamente e retornar respostas HTTP seguras e padronizadas ao cliente.
+* **Validação de Dados:** Uso de **Data Annotations** diretamente nas entidades para garantir a integridade das informações (como campos obrigatórios e tamanhos máximos) antes de chegarem ao banco, gerando respostas 400 (Bad Request) automáticas.
+* **Manipulação de Dados e JSON:** Entendimento sobre **serialização e desserialização**, além da resolução de *loops* infinitos (*Object Cycles*) na leitura de dados relacionados utilizando `ReferenceHandler.IgnoreCycles`.
+* **Otimização de Consultas (Performance):** Aplicação do método `.AsNoTracking()` no Entity Framework para *endpoints* de leitura (GET), economizando memória ao evitar o rastreamento de estado, e uso do `.Take()` para restringir a quantidade de registros retornados.
+* **Configuração de Documentação e Rotas:** Alternância entre Swagger e Scalar, resolução de conflitos em atributos de rota e restrições (como `[HttpPut("{id:int}")]`).
 
 ## ⚙️ Como executar o projeto localmente
 
