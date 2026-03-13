@@ -3,7 +3,7 @@
 > Uma Web API desenvolvida em ASP.NET Core com o objetivo de explorar, testar e consolidar diferentes abordagens e ferramentas no ecossistema .NET.
 
 ## 🎯 Sobre o Projeto
-Este projeto foi construído do zero como um laboratório prático de estudos. A ideia principal não foi apenas fazer um CRUD funcional, mas sim testar diversas opções de configuração, arquitetura, otimização de consultas e resolução de problemas comuns no desenvolvimento de APIs modernas.
+Este projeto foi construído do zero como um laboratório prático de estudos. A ideia principal não foi apenas fazer um CRUD funcional, mas sim testar diversas opções de configuração, arquitetura limpa, otimização de consultas e resolução de problemas comuns no desenvolvimento de APIs modernas.
 
 O domínio simula um catálogo simples com uma relação de 1:N entre **Categorias** e **Produtos**.
 
@@ -17,6 +17,8 @@ O domínio simula um catálogo simples com uma relação de 1:N entre **Categori
 ## 🚀 Principais Aprendizados e Desafios Superados
 Durante o desenvolvimento, implementei e resolvi diversas situações do mundo real, aprofundando o conhecimento em:
 
+* **Arquitetura de Dados (Repository & Unit of Work):** * Implementação do **Padrão Repository**, criando um **Repositório Genérico** para abstrair as operações comuns de CRUD e **Repositórios Específicos** (Categorias e Produtos) para consultas especializadas, desacoplando os *controllers* do acesso direto ao banco.
+  * Uso do padrão **Unit of Work (Unidade de Trabalho)** para centralizar e coordenar a persistência de dados, garantindo que múltiplas operações compartilhem a mesma instância de contexto do EF Core e sejam tratadas como uma transação atômica.
 * **Programação Assíncrona (`async/await`):** Transição para métodos assíncronos no acesso a dados, liberando *threads* durante operações de I/O para melhorar a escalabilidade e o tempo de resposta da API.
 * **Arquitetura e Pipeline HTTP:** Entendimento profundo do fluxo de requisições no ASP.NET Core através da configuração e uso de **Middlewares** para interceptar, processar ou barrar chamadas antes que cheguem aos *controllers*.
 * **Tratamento Global de Exceções e Logging:** Evolução na resiliência da aplicação. Substituição de blocos `try-catch` repetitivos por uma abordagem centralizada e elegante usando **Filtros de Exceção (Exception Filters)** e a interface **`IExceptionHandler`** global, integrados com **Logging** para registrar falhas silenciosamente e retornar respostas HTTP seguras e padronizadas ao cliente.
