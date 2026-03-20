@@ -18,6 +18,7 @@ O domínio simula um catálogo simples com uma relação de 1:N entre **Categori
 ## 🚀 Principais Aprendizados e Desafios Superados
 Durante o desenvolvimento, implementei e resolvi diversas situações do mundo real, aprofundando o conhecimento em:
 
+* **Paginação de Dados e Filtros:** Implementação de paginação nos *endpoints* de listagem (utilizando `Skip` e `Take` no Entity Framework Core) para fatiar o retorno de dados, evitando gargalos de memória e rede em grandes volumes de registros. Inclusão de parâmetros via *Query String* para filtrar produtos por preço e navegar entre as páginas de forma dinâmica.
 * **Transferência de Dados (DTOs) e AutoMapper:** Implementação do padrão **DTO (Data Transfer Object)** para separar os modelos de domínio dos contratos da API, garantindo controle preciso sobre o formato dos dados de entrada e saída. Uso do **AutoMapper** para automatizar e simplificar a conversão entre as entidades do banco e os DTOs.
 * **Atualizações Parciais (HTTP PATCH):** Implementação do verbo `PATCH` no *controller* de Produtos, utilizando o padrão **JSON Patch** (com suporte do `Newtonsoft.Json`) para atualizar campos específicos de um registro de forma eficiente, sem a necessidade de enviar o objeto inteiro na requisição.
 * **Arquitetura de Dados (Repository & Unit of Work):** * Implementação do **Padrão Repository**, criando um **Repositório Genérico** para abstrair operações comuns de CRUD e **Repositórios Específicos** (Categorias e Produtos) para consultas especializadas, desacoplando os *controllers* do banco de dados.
@@ -27,7 +28,7 @@ Durante o desenvolvimento, implementei e resolvi diversas situações do mundo r
 * **Tratamento Global de Exceções e Logging:** Evolução na resiliência da aplicação substituindo blocos `try-catch` repetitivos por uma abordagem centralizada usando **Filtros de Exceção** e a interface **`IExceptionHandler`** global, integrados com **Logging** para registrar falhas silenciosamente.
 * **Validação de Dados e Segurança:** Uso de **Data Annotations** para garantir a integridade das informações, gerando respostas 400 (Bad Request) automáticas. Configuração do **User Secrets** para proteger *connection strings* durante o desenvolvimento, evitando o vazamento de credenciais no repositório.
 * **Manipulação de Dados e JSON:** Resolução de *loops* infinitos (*Object Cycles*) na leitura de dados relacionados utilizando `ReferenceHandler.IgnoreCycles`.
-* **Otimização de Consultas:** Aplicação do `.AsNoTracking()` no EF Core para *endpoints* de leitura (GET), economizando memória, e uso do `.Take()` para restringir a quantidade de registros retornados.
+* **Otimização de Consultas:** Aplicação do `.AsNoTracking()` no EF Core para *endpoints* de leitura (GET), economizando memória ao evitar o rastreamento de estado de objetos que não serão modificados.
 
 ## ⚙️ Como executar o projeto localmente
 
