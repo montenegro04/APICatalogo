@@ -11,10 +11,12 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
    {
    }
 
-    public PagedList<Categoria> GetCategorias(CategoriasParameters categoriasParams)
+    public async Task<PagedList<Categoria>> GetCategoriasAsync(CategoriasParameters categoriasParams)
     {
-         var categorias = GetAll().OrderBy(p => p.CategoriaId).AsQueryable();
-        var categoriasOrdenados = PagedList<Categoria>.ToPagedList(categorias, categoriasParams.PageNumber, categoriasParams.PageSize);
-        return categoriasOrdenados;
+        var categorias = GetQueryable();
+        var categoriasOrdenadas = categorias.OrderBy(p => p.CategoriaId);
+        var resultado = await PagedList<Categoria>.ToPagedListAsync(categoriasOrdenadas, categoriasParams.PageNumber, categoriasParams.PageSize);
+
+        return resultado;
     }
 }
