@@ -5,11 +5,10 @@ using APICatalogo.Extensions;
 using APICatalogo.Filters;
 using APICatalogo.Repositories;
 using APICatalogo.Interfaces;
-using APICatalogo.DTOs.Mappings;
+using APICatalogo.Models;
+using Scalar.AspNetCore; 
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers(options =>
 {
@@ -22,13 +21,16 @@ builder.Services.AddControllers(options =>
 .AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
 
 string? mySqlConection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(mySqlConection, ServerVersion.AutoDetect(mySqlConection)));
+
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+        .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddScoped<ApiLoggingFilter>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
@@ -39,19 +41,21 @@ builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // 3. Expondo a documentação moderna com o SCALAR (substitui o UseSwagger)
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+    
     app.ConfigureExceptionHandler();
 }
 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
+
+//app.MapIdentityApi<ApplicationUser>();
 
 app.MapControllers();
 

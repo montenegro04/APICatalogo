@@ -5,6 +5,7 @@ using APICatalogo.Models;
 using APICatalogo.DTOs.Mappings;
 using APICatalogo.Pagination;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APICatalogo.Controllers;
 
