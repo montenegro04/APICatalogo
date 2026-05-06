@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="APICatalogo/APICatalogo.csproj" />
+  <Project Path="TestaCorsMVC.Web/TestaCorsMVC.Web.csproj" />
+</Solution>
